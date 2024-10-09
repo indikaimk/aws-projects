@@ -17,10 +17,11 @@ export class SimpleWebAppStack extends cdk.Stack {
       ipProtocol: ec2.IpProtocol.DUAL_STACK,
     });
 
-    const sshKey = new ec2.KeyPair(this, "ssh-key", {
+    const sshKey = new ec2.KeyPair(this, "simple-webapp-ssh-key", {
       keyPairName: "ssh-key",
     });
 
+    // Prefix S3 bucket with your orgname for uniqueness.
     const webappBucket = new s3.Bucket(this, "cloudqubes-webapp-bucket", {
       removalPolicy: cdk.RemovalPolicy.DESTROY // Set to retain for a production app
     })
@@ -71,9 +72,13 @@ export class SimpleWebAppStack extends cdk.Stack {
       zoneName: "dev.cloudqubes.com"
     })
 
+    const eIP = new ec2.CfnEIP(this, "web-server-ip", {
+      instanceId: webServer.instanceId
+    });
+
     const r = new r53.ARecord(this, "cloudqubes-a-record", {
       zone: cloudqubesZone,
-      target: r53.RecordTarget.fromIpAddresses(eIP)
+      target: r53.RecordTarget.fromIpAddresses(eIP.attrPublicIp)
     })
 
     webServer.connections.allowFromAnyIpv4(ec2.Port.HTTPS)
@@ -82,8 +87,6 @@ export class SimpleWebAppStack extends cdk.Stack {
     webServer.connections.allowFrom(ec2.Peer.ipv4("175.157.0.0/16"), ec2.Port.SSH)
 
 
-    const eIP = new ec2.CfnEIP(this, "web-server-ip", {
-      instanceId: webServer.instanceId
-    })
+
   }
 }

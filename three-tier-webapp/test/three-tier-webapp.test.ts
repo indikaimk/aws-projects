@@ -1,13 +1,13 @@
 // import * as cdk from 'aws-cdk-lib';
 // import { Template } from 'aws-cdk-lib/assertions';
-// import * as AWebapp from '../lib/a-webapp-stack';
+// import * as ThreeTierWebapp from '../lib/three-tier-webapp-stack';
 
 // example test. To run these tests, uncomment this file along with the
-// example resource in lib/a-webapp-stack.ts
+// example resource in lib/three-tier-webapp-stack.ts
 test('SQS Queue Created', () => {
 //   const app = new cdk.App();
 //     // WHEN
-//   const stack = new AWebapp.AWebappStack(app, 'MyTestStack');
+//   const stack = new ThreeTierWebapp.ThreeTierWebappStack(app, 'MyTestStack');
 //     // THEN
 //   const template = Template.fromStack(stack);
 

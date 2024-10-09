@@ -1,18 +1,13 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as route53 from 'aws-cdk-lib/aws-route53';
+import * as targets from 'aws-cdk-lib/aws-route53-targets';
 import * as autoscaling from 'aws-cdk-lib/aws-autoscaling';
 import * as elbv2 from 'aws-cdk-lib/aws-elasticloadbalancingv2';
-import * as iam from 'aws-cdk-lib/aws-iam';
-import { constants } from 'fs/promises';
-import { Alias } from 'aws-cdk-lib/aws-kms';
-import { TargetTrackingScalingPolicy } from 'aws-cdk-lib/aws-applicationautoscaling';
-import { AlbTarget } from 'aws-cdk-lib/aws-elasticloadbalancingv2-targets';
-import { LoadBalancerTarget } from 'aws-cdk-lib/aws-route53-targets';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
-export class AWebappStack extends cdk.Stack {
+export class ThreeTierWebappStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -59,7 +54,7 @@ export class AWebappStack extends cdk.Stack {
     const aRecord = new route53.ARecord(this, 'webapp-a-record', {
       zone: aWebappZone,
       recordName: 'dev',
-      target: route53.RecordTarget.fromAlias(new AlbTarget.)
+      target: route53.RecordTarget.fromAlias(new targets.LoadBalancerTarget(alb))
     })
 
     const appServerTemplate = new ec2.LaunchTemplate(this, 'app-server-template', {
@@ -78,5 +73,15 @@ export class AWebappStack extends cdk.Stack {
       maxCapacity: 2,
       launchTemplate: appServerTemplate,
     });
+
+    port80Listner.addTargets('a-webapp-servers', {
+      port: 8080,
+      targets: [appServerASG]
+    });
+
+    port443Listner.addTargets('three-t-webapp', {
+      port: 8080,
+      targets: [appServerASG]      
+    })
   }
 }

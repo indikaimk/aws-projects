@@ -1,8 +1,30 @@
-# Welcome to your CDK TypeScript project
+# Three-tier web application on AWS
 
-This is a blank project for CDK development with TypeScript.
+This CDK stack creates AWS cloud infrastrucutre for deploying a three-tier web application on AWS
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+![AWS architecture](./three-tier-webapp.webp)
+
+However, as AWS recommends this stack does not use separate EC2 instnces for web server. Instead we deploy both web server and the web application on the same EC2 on Docker and avoid the use of two ALBs.
+
+# Deploying the CDK stack
+
+```shell
+$ npm run build
+$ npm cdk deploy
+```
+
+> You will be charged for the AWS resources.
+
+Now you can deploy the web application on the EC2.
+
+For details on how to deploy a web application on Docker checkout this [tutorial](https://cloudqubes.com/tutorial/deploying-rails-7-on-docker/).
+
+# Destroy the stack
+
+```shell
+$ npm cdk destroy
+```
+
 
 ## Useful commands
 

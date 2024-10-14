@@ -25,7 +25,7 @@ Set `deleteOnTermination` to false for both EBS volumes:
 deleteOnTermination: false
 ```
 
-# How to deploy the stack
+# Deploying the CDK stack
 
 ```shell
 $ npm run build
